@@ -1,6 +1,8 @@
 using NUnit.Framework;
 using System;
 using System.Text.RegularExpressions;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 // ReSharper disable once CheckNamespace
 namespace Solana.Unity.SDK.Tests.EditMode.Crypto
@@ -79,6 +81,9 @@ namespace Solana.Unity.SDK.Tests.EditMode.Crypto
             var session = new MobileWalletAdapterSession();
             var payload = new byte[] { 0x01, 0x02, 0x03 };
 
+            // Tell Unity we expect the Debug.LogError the production code emits
+            LogAssert.Expect(LogType.Error, "Cannot encrypt, no session key has been established");
+
             // Act & Assert
             var ex = Assert.Throws<InvalidOperationException>(() =>
                 session.EncryptSessionPayload(payload));
@@ -93,6 +98,9 @@ namespace Solana.Unity.SDK.Tests.EditMode.Crypto
             // Arrange — fresh session, GenerateSessionEcdhSecret has NOT been called
             var session = new MobileWalletAdapterSession();
             var payload = new byte[64]; // arbitrary non-empty payload
+
+            // Tell Unity we expect the Debug.LogError the production code emits
+            LogAssert.Expect(LogType.Error, "Cannot encrypt, no session key has been established");
 
             // Act & Assert
             Assert.Throws<InvalidOperationException>(() =>
